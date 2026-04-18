@@ -1,0 +1,27 @@
+{% extends "accounts/auth_base.html" %}
+{% block title %}Teacher Login{% endblock %}
+{% block focus_color %}#f59e0b{% endblock %}
+{% block focus_shadow %}rgba(245,158,11,.12){% endblock %}
+{% block btn_bg %}linear-gradient(90deg,#d97706,#f59e0b){% endblock %}
+{% block link_color %}#f59e0b{% endblock %}
+{% block auth_content %}
+<div class="auth-icon" style="background:#fef3c7;color:#f59e0b;">
+  <i class="bi bi-person-video3"></i>
+</div>
+<h2>Teacher Login</h2>
+<p class="subtitle">Manage your exams and students</p>
+
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label class="form-label">Employee ID</label>
+    <input type="text" name="employee_id" class="form-control" placeholder="Enter your Employee ID" required/>
+  </div>
+  <div class="mb-4">
+    <label class="form-label">Password</label>
+    <input type="password" name="password" class="form-control" placeholder="Enter your password" required/>
+  </div>
+  <button type="submit" class="btn btn-submit">Login</button>
+</form>
+<div class="switch-link">New teacher? <a href="/teacher/register/" style="color:#f59e0b;">Register here</a></div>
+{% endblock %}

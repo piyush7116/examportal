@@ -1,0 +1,110 @@
+{% extends "base/base.html" %}
+{% block title %}{{ subject.name }} Analytics{% endblock %}
+{% block content %}
+<div class="container-fluid my-4">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0"><i class="fas fa-book"></i> {{ subject.name }} - Class Analytics</h4>
+                    <a href="{% url 'teacher:home' %}" class="btn btn-light btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+                <div class="card-body">
+                    <!-- Class Statistics -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h3 class="text-primary">{{ total_students }}</h3>
+                                    <p class="text-muted">Total Students</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h3 class="text-success">{{ class_avg }}</h3>
+                                    <p class="text-muted">Class Average</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h3 class="text-info">{{ class_max }}</h3>
+                                    <p class="text-muted">Highest Score</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h3 class="text-warning">{{ class_min }}</h3>
+                                    <p class="text-muted">Lowest Score</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Student Performance Table -->
+                    <h5 class="mb-3">Student-wise Performance</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Roll Number</th>
+                                    <th>Name</th>
+                                    <th>Total Marks</th>
+                                    <th>Avg Exam %</th>
+                                    <th>Exam Attempts</th>
+                                    <th>Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in student_data %}
+                                <tr>
+                                    <td>{{ item.enrollment.student.roll_number }}</td>
+                                    <td>{{ item.enrollment.student.user.get_full_name }}</td>
+                                    <td>
+                                        <strong>{{ item.total_marks.total_marks|floatformat:1 }}/100</strong>
+                                    </td>
+                                    <td>
+                                        {% if item.avg_exam_percentage %}
+                                            {{ item.avg_exam_percentage }}%
+                                        {% else %}
+                                            <span class="text-muted">—</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ item.exam_attempts }}</td>
+                                    <td>
+                                        {% if item.total_marks.total_marks >= 80 %}
+                                            <span class="badge badge-success">A</span>
+                                        {% elif item.total_marks.total_marks >= 70 %}
+                                            <span class="badge badge-info">B</span>
+                                        {% elif item.total_marks.total_marks >= 60 %}
+                                            <span class="badge badge-warning">C</span>
+                                        {% elif item.total_marks.total_marks >= 50 %}
+                                            <span class="badge badge-danger">D</span>
+                                        {% else %}
+                                            <span class="badge badge-dark">F</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% if not student_data %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> No student data for this subject yet.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "student/student_base.html" %}
+{% block title %}Notifications{% endblock %}
+{% block content %}
+<div class="page-header"><h1>Important Notifications</h1><p>Stay updated with announcements and alerts</p></div>
+<div class="row g-3">
+  {% for n in notifications %}
+  <div class="col-12">
+    <div class="card-portal p-4">
+      <div class="d-flex justify-content-between align-items-start">
+        <div class="d-flex gap-3 align-items-start">
+          <div style="width:44px;height:44px;border-radius:10px;background:{% if n.priority == 'high' %}#fee2e2;color:#dc2626{% elif n.priority == 'medium' %}#fef3c7;color:#d97706{% else %}#d1fae5;color:#059669{% endif %};display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem;">
+            <i class="bi bi-bell-fill"></i>
+          </div>
+          <div>
+            <h6 style="font-weight:700;margin-bottom:4px;">{{ n.title }}</h6>
+            <p class="text-muted mb-1" style="font-size:.9rem;">{{ n.message }}</p>
+            <small class="text-muted">{{ n.created_at|date:"d M Y, H:i" }}</small>
+          </div>
+        </div>
+        <span class="badge-{{ n.priority }}">{{ n.priority|title }}</span>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12"><div class="card-portal p-5 text-center text-muted"><i class="bi bi-bell-slash fs-2 d-block mb-2"></i>No notifications at the moment.</div></div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base/base.html" %}
+{% block title %}Syllabus Management{% endblock %}
+{% block nav_links %}
+<li class="nav-item"><a class="nav-link" href="{% url 'adminpanel:dashboard' %}">Dashboard</a></li>
+<li class="nav-item"><a class="nav-link active" href="{% url 'adminpanel:syllabus' %}">Syllabus</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'adminpanel:notifications' %}">Notifications</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'adminpanel:students' %}">Students</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'adminpanel:teachers_manage' %}">Teachers</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'adminpanel:exam_list' %}">Exams</a></li>
+{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+  <div class="page-header mb-0">
+    <h1>Syllabus Management</h1>
+    <p class="text-muted mb-0">Manage subject syllabus for AI question generation</p>
+  </div>
+  <a href="/adminpanel/syllabus/add/" class="btn btn-primary-portal"><i class="bi bi-plus-lg me-1"></i> Add Subject</a>
+</div>
+
+{% for subject in subjects %}
+<div class="card-portal p-4 mb-3">
+  <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+    <div>
+      <h5 style="font-weight:700;margin-bottom:4px;">{{ subject.name }}</h5>
+      <p class="text-muted mb-3" style="font-size:.85rem;">Uploaded: {{ subject.created_at|date:"Y-m-d" }}</p>
+      <div>
+        {% for topic in subject.get_topics_list %}
+          <span class="topic-chip">{{ topic }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="/adminpanel/syllabus/edit/{{ subject.id }}/" class="btn btn-sm btn-outline-primary" title="Edit"><i class="bi bi-pencil-square"></i></a>
+      <a href="/adminpanel/syllabus/delete/{{ subject.id }}/" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete subject?')" title="Delete"><i class="bi bi-trash"></i></a>
+    </div>
+  </div>
+</div>
+{% empty %}
+<div class="card-portal p-5 text-center text-muted"><i class="bi bi-book fs-2 d-block mb-2"></i>No subjects added yet. Click "Add Subject" to get started.</div>
+{% endfor %}
+{% endblock %}

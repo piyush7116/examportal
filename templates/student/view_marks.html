@@ -1,0 +1,215 @@
+{% extends 'student/student_base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-12">
+            <!-- Header Section -->
+            <div class="glass-header p-4 rounded-top mb-0 d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-1 text-white font-weight-bold">Academic Performance</h2>
+                    <p class="text-white-50 mb-0"><i class="fas fa-graduation-cap"></i> Track your progress across all subjects</p>
+                </div>
+                <div class="icon-box">
+                    <i class="fas fa-chart-line fa-2x text-white"></i>
+                </div>
+            </div>
+
+            <!-- Table Card -->
+            <div class="card shadow-lg border-0 rounded-bottom overflow-hidden">
+                <div class="card-body p-0">
+                    {% if subject_marks %}
+                    <div class="table-responsive">
+                        <table class="table table-hover custom-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="pl-4">Subject</th>
+                                    <th>Theory Marks</th>
+                                    <th>MCQs Marks</th>
+                                    <th>Quiz Marks</th>
+                                    <th>Assignments Marks</th>
+                                    <th class="text-center">Total Marks</th>
+                                    <th class="pr-4 text-center">Options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in subject_marks %}
+                                <tr>
+                                    <td class="pl-4">
+                                        <div class="subject-info">
+                                            <span class="subject-name">{{ item.subject.name }}</span>
+                                            <span class="teacher-name text-muted d-block small">Prof. {{ item.teacher.get_full_name|default:"TBA" }}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="mark-val">{{ item.total_marks.theory_marks|default:"0"|floatformat:1 }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="mark-val">{{ item.total_marks.mcq_marks|default:"0"|floatformat:1 }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="mark-val sub-mark">{{ item.total_marks.quiz_marks|default:"0"|floatformat:1 }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="mark-val sub-mark">{{ item.total_marks.assignment_marks|default:"0"|floatformat:1 }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        {% if item.total_marks %}
+                                        <div class="total-badge {% if item.total_marks.total_marks >= 75 %}high-score{% elif item.total_marks.total_marks >= 40 %}mid-score{% else %}low-score{% endif %}">
+                                            {{ item.total_marks.total_marks|floatformat:1 }} / 100
+                                        </div>
+                                        {% else %}
+                                        <span class="text-muted italic small">Not Available</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="pr-4 text-center">
+                                        <a href="{% url 'student:subject_marks_detail' item.subject.id %}" class="btn-view-details">
+                                            <i class="fas fa-arrow-right"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="empty-state py-5 text-center">
+                        <img src="{% static 'img/no-data.svg' %}" alt="No data" class="mb-4" style="width: 150px; opacity: 0.6;">
+                        <h4 class="text-muted font-weight-light">No Enrolled Subjects</h4>
+                        <p class="text-muted small">Your academic performance will be displayed once you are enrolled in subjects.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Summary Info -->
+            <div class="mt-4 alert alert-custom shadow-sm border-0 d-flex align-items-center">
+                <i class="fas fa-info-circle fa-lg mr-3"></i>
+                <div>
+                    <small>Marks are updated in real-time as teachers grade your assignments and quizzes. Contact your department head for any discrepancies.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Premium Header */
+    .glass-header {
+        background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
+        border-bottom: 3px solid rgba(255,255,255,0.1);
+    }
+
+    .badge-light-blue {
+        background: rgba(255,255,255,0.2);
+        color: white;
+        font-weight: normal;
+        margin-left: 5px;
+    }
+
+    /* Custom Table Styling */
+    .custom-table thead th {
+        background: #f8f9fa;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+        color: #5c6bc0;
+        border-bottom: 2px solid #e8eaf6;
+        vertical-align: middle;
+        padding-top: 1.2rem;
+        padding-bottom: 1.2rem;
+    }
+
+    .custom-table tbody tr {
+        transition: all 0.2s ease;
+    }
+
+    .custom-table tbody tr:hover {
+        background-color: #f3f4ff !important;
+        transform: scale(1.002);
+    }
+
+    .custom-table td {
+        vertical-align: middle;
+        padding: 1.2rem 0.75rem;
+        border-top: 1px solid #f1f1f1;
+    }
+
+    .subject-name {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 1rem;
+    }
+
+    .mark-val {
+        font-family: 'Outfit', 'Inter', sans-serif;
+        font-weight: 500;
+        color: #3f51b5;
+        font-size: 1.05rem;
+    }
+
+    /* Score Badges */
+    .total-badge {
+        display: inline-block;
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    .high-score {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .mid-score {
+        background-color: #fff3e0;
+        color: #ef6c00;
+    }
+
+    .low-score {
+        background-color: #ffebee;
+        color: #c62828;
+    }
+
+    /* View Button */
+    .btn-view-details {
+        width: 35px;
+        height: 35px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #e8eaf6;
+        color: #3949ab;
+        border-radius: 50%;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .btn-view-details:hover {
+        background: #3949ab;
+        color: white;
+        transform: scale(1.2) rotate(-45deg);
+        box-shadow: 0 4px 10px rgba(57, 73, 171, 0.3);
+    }
+
+    .alert-custom {
+        background-color: #e3f2fd;
+        border-left: 5px solid #1976d2;
+        color: #0d47a1;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .custom-table thead { display: none; }
+        .custom-table, .custom-table tbody, .custom-table tr, .custom-table td { display: block; width: 100%; }
+        .custom-table tr { margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .custom-table td { border: none; padding: 5px 20px; position: relative; padding-left: 50%; }
+        .custom-table td::before { 
+            content: attr(data-label); 
+            position: absolute; left: 20px; font-weight: bold; font-size: 0.8rem;
+        }
+    }
+</style>
+{% endblock %}

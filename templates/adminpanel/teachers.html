@@ -1,0 +1,37 @@
+{% extends "base/base.html" %}{% block title %}Teachers{% endblock %}
+{% block nav_links %}
+<li class="nav-item"><a class="nav-link" href="/adminpanel/">Dashboard</a></li>
+<li class="nav-item"><a class="nav-link" href="/adminpanel/syllabus/">Syllabus</a></li>
+<li class="nav-item"><a class="nav-link" href="/adminpanel/notifications/">Notifications</a></li>
+<li class="nav-item"><a class="nav-link" href="/adminpanel/students/">Students</a></li>
+<li class="nav-item"><a class="nav-link active" href="/adminpanel/teachers/">Teachers</a></li>
+<li class="nav-item"><a class="nav-link" href="/adminpanel/exams/">Exams</a></li>
+{% endblock %}
+{% block content %}
+<div class="page-header"><h1>Teachers</h1><p>{{ teachers|length }} registered teachers</p></div>
+<div class="table-portal">
+  <table class="table table-hover mb-0">
+    <thead><tr><th>Name</th><th>Employee ID</th><th>Department</th><th>Designation</th><th>Subjects</th></tr></thead>
+    <tbody>
+    {% for t in teachers %}
+    <tr>
+      <td>
+        <div class="d-flex align-items-center gap-2">
+          <div class="avatar-circle" style="background:linear-gradient(135deg,#d97706,#f59e0b);width:36px;height:36px;font-size:.82rem;">
+            {{ t.user.first_name|first|upper }}{{ t.user.last_name|first|upper }}
+          </div>
+          {{ t.user.get_full_name|default:t.employee_id }}
+        </div>
+      </td>
+      <td>{{ t.employee_id }}</td>
+      <td>{{ t.department }}</td>
+      <td>{{ t.designation }}</td>
+      <td><small class="text-muted">{{ t.subjects|truncatechars:50 }}</small></td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5" class="text-center text-muted py-4">No teachers registered yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

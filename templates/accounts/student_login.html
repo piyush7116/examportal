@@ -1,0 +1,25 @@
+{% extends "accounts/auth_base.html" %}
+{% block title %}Student Login{% endblock %}
+{% block auth_content %}
+<div class="auth-icon" style="background:#dbeafe;color:#2563eb;">
+  <i class="bi bi-mortarboard-fill"></i>
+</div>
+<h2>Student Login</h2>
+<p class="subtitle">Access your examination portal</p>
+
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label class="form-label">College Roll Number</label>
+    <input type="text" name="roll_number" class="form-control" placeholder="Enter your roll number" required/>
+  </div>
+  <div class="mb-4">
+    <label class="form-label">Password</label>
+    <input type="password" name="password" class="form-control" placeholder="Enter your password" required/>
+  </div>
+  <button type="submit" class="btn btn-submit">Login</button>
+</form>
+<div class="switch-link">
+  Don't have an account? <a href="/student/register/">Create Account</a>
+</div>
+{% endblock %}

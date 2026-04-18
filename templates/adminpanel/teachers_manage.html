@@ -1,0 +1,80 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid my-4">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0"><i class="fas fa-chalkboard-user"></i> Manage Teachers</h4>
+                    <a href="{% url 'adminpanel:add_teacher' %}" class="btn btn-light btn-sm">
+                        <i class="fas fa-user-plus"></i> Add New Teacher
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Employee ID</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Designation</th>
+                                    <th>Email</th>
+                                    <th>Students</th>
+                                    <th>Exams</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in teachers_data %}
+                                <tr>
+                                    <td><strong>{{ item.profile.employee_id }}</strong></td>
+                                    <td>{{ item.profile.user.get_full_name }}</td>
+                                    <td>{{ item.profile.department }}</td>
+                                    <td>{{ item.profile.designation }}</td>
+                                    <td>{{ item.profile.email }}</td>
+                                    <td>
+                                        <span class="badge badge-info">{{ item.enrolled_students }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-success">{{ item.exams_created }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'adminpanel:view_teacher_details' item.profile.id %}" class="btn btn-sm btn-outline-primary" title="View">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                            <a href="{% url 'adminpanel:edit_teacher' item.profile.id %}" class="btn btn-sm btn-outline-warning" title="Edit">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+                                            <a href="{% url 'adminpanel:assign_subject_to_teacher' item.profile.id %}" class="btn btn-sm btn-primary" title="Assign Subjects">
+                                                <i class="fas fa-book"></i> Assign
+                                            </a>
+                                            <a href="{% url 'adminpanel:teacher_activity' item.profile.id %}" class="btn btn-sm btn-outline-success" title="Activity">
+                                                <i class="fas fa-chart-line"></i> Activity
+                                            </a>
+                                            <a href="{% url 'adminpanel:delete_teacher' item.profile.id %}" class="btn btn-sm btn-outline-danger" title="Delete" onclick="return confirm('Are you sure?')">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    {% if not teachers_data %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> No teachers added yet. 
+                        <a href="{% url 'adminpanel:add_teacher' %}">Add first teacher</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

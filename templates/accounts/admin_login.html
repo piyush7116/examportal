@@ -1,0 +1,29 @@
+{% extends "accounts/auth_base.html" %}
+{% block title %}Admin Login{% endblock %}
+{% block focus_color %}#10b981{% endblock %}
+{% block focus_shadow %}rgba(16,185,129,.12){% endblock %}
+{% block btn_bg %}linear-gradient(90deg,#059669,#10b981){% endblock %}
+{% block link_color %}#10b981{% endblock %}
+{% block auth_content %}
+<div class="auth-icon" style="background:#d1fae5;color:#10b981;">
+  <i class="bi bi-gear-fill"></i>
+</div>
+<h2>Admin Login</h2>
+<p class="subtitle">System administration access</p>
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label class="form-label">Username</label>
+    <input type="text" name="username" class="form-control" placeholder="Enter admin username" required/>
+  </div>
+  <div class="mb-4">
+    <label class="form-label">Password</label>
+    <input type="password" name="password" class="form-control" placeholder="Enter your password" required/>
+  </div>
+  <button type="submit" class="btn btn-submit">Login</button>
+</form>
+<div class="switch-link">New admin? <a href="/admin-register/" style="color:#10b981;">Create Admin Account</a></div>
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;text-align:center;font-size:.82rem;color:#94a3b8;margin-top:16px;">
+  Demo: create via <code>python manage.py createsuperadmin</code>
+</div>
+{% endblock %}

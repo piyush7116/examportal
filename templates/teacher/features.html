@@ -1,0 +1,27 @@
+{% extends "base/base.html" %}{% block title %}Teacher Features{% endblock %}
+{% block nav_links %}<li class="nav-item"><a class="nav-link" href="/teacher/">Home</a></li><li class="nav-item"><a class="nav-link active" href="/teacher/features/">Features</a></li><li class="nav-item"><a class="nav-link" href="/teacher/account/">Account</a></li>{% endblock %}
+{% block content %}
+<div class="text-center mb-5"><h1 style="font-weight:700;">Teacher Features</h1><p class="text-muted">Tools to manage exams and students</p></div>
+<div class="row g-4">
+  <div class="col-12 col-md-4">
+    <a href="/teacher/account/" class="text-decoration-none">
+      <div class="feature-card h-100"><div class="feature-icon" style="background:#fef3c7;color:#f59e0b;"><i class="bi bi-person-fill"></i></div><h5 style="font-weight:700;">My Account</h5><p class="text-muted" style="font-size:.9rem;">Manage your profile, department, and teaching details.</p><span style="color:#f59e0b;font-weight:600;font-size:.88rem;">Access Feature <i class="bi bi-chevron-right"></i></span></div>
+    </a>
+  </div>
+  <div class="col-12 col-md-4">
+    <a href="/teacher/notify/" class="text-decoration-none">
+      <div class="feature-card h-100"><div class="feature-icon" style="background:#d1fae5;color:#10b981;"><i class="bi bi-bell-fill"></i></div><h5 style="font-weight:700;">Live Notifications</h5><p class="text-muted" style="font-size:.9rem;">Send important notifications and alerts to all students.</p><span style="color:#10b981;font-weight:600;font-size:.88rem;">Access Feature <i class="bi bi-chevron-right"></i></span></div>
+    </a>
+  </div>
+  <div class="col-12 col-md-4">
+    <a href="/teacher/students/" class="text-decoration-none">
+      <div class="feature-card h-100"><div class="feature-icon" style="background:#dbeafe;color:#2563eb;"><i class="bi bi-people-fill"></i></div><h5 style="font-weight:700;">Student Activity</h5><p class="text-muted" style="font-size:.9rem;">Monitor student exam attempts, scores, and practice sessions.</p><span style="color:#2563eb;font-weight:600;font-size:.88rem;">Access Feature <i class="bi bi-chevron-right"></i></span></div>
+    </a>
+  </div>
+  <div class="col-12 col-md-4">
+    <a href="/teacher/upload-questions/" class="text-decoration-none">
+      <div class="feature-card h-100"><div class="feature-icon" style="background:#ede9fe;color:#8b5cf6;"><i class="bi bi-cloud-upload-fill"></i></div><h5 style="font-weight:700;">Upload Questions</h5><p class="text-muted" style="font-size:.9rem;">Upload practice questions for students by subject and topic.</p><span style="color:#8b5cf6;font-weight:600;font-size:.88rem;">Access Feature <i class="bi bi-chevron-right"></i></span></div>
+    </a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,218 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid my-4">
+    <div class="row">
+        <div class="col-lg-12">
+            <!-- Teacher Header Card -->
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="mb-0"><i class="fas fa-user-tie"></i> {{ teacher.user.get_full_name }}</h4>
+                        <small class="text-light">Employee ID: {{ teacher.employee_id }}</small>
+                    </div>
+                    <div class="btn-group">
+                        <a href="{% url 'adminpanel:edit_teacher' teacher.id %}" class="btn btn-light btn-sm">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a href="{% url 'adminpanel:teachers_manage' %}" class="btn btn-light btn-sm">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <p><strong>Department:</strong> {{ teacher.department }}</p>
+                            <p><strong>Designation:</strong> {{ teacher.designation }}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p><strong>Email:</strong> {{ teacher.email }}</p>
+                            <p><strong>Phone:</strong> {{ teacher.user.phone|default:"—" }}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p><strong>Username:</strong> {{ teacher.user.username }}</p>
+                            <p><strong>Date Joined:</strong> {{ teacher.user.date_joined|date:"d M Y" }}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p><strong>Students Taught:</strong> <span class="badge badge-info badge-lg">{{ total_students_taught }}</span></p>
+                            <p><strong>Exams Created:</strong> <span class="badge badge-success badge-lg">{{ total_exams }}</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Row -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="text-primary">{{ total_students_taught }}</h3>
+                            <p class="text-muted">Total Students Enrolled</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="text-success">{{ total_exams }}</h3>
+                            <p class="text-muted">Exams Created</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="text-info">{{ attempts_count }}</h3>
+                            <p class="text-muted">Exam Attempts</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="text-warning">{{ subject_stats|length }}</h3>
+                            <p class="text-muted">Subjects</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subject-wise Statistics -->
+            <div class="row mb-4">
+                <div class="col-lg-12">
+                    <div class="card shadow">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="fas fa-book"></i> Subject-wise Student Count</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if subject_stats %}
+                            <div class="row">
+                                {% for subject, count in subject_stats.items %}
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="alert alert-light border-left border-primary">
+                                        <strong>{{ subject }}</strong>
+                                        <div class="mt-2">
+                                            <span class="badge badge-primary badge-lg">{{ count }} students</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="alert alert-info">No subjects assigned yet.</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exams Created -->
+            <div class="row mb-4">
+                <div class="col-lg-12">
+                    <div class="card shadow">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="fas fa-list-check"></i> Exams Created ({{ exams_created|length }})</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if exams_created %}
+                            <div class="table-responsive">
+                                <table class="table table-hover table-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Exam Title</th>
+                                            <th>Subject</th>
+                                            <th>Total Marks</th>
+                                            <th>Duration</th>
+                                            <th>Questions</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for exam in exams_created %}
+                                        <tr>
+                                            <td>{{ exam.title }}</td>
+                                            <td>{{ exam.subject.name }}</td>
+                                            <td>{{ exam.total_marks }}</td>
+                                            <td>{{ exam.duration_minutes }} min</td>
+                                            <td><span class="badge badge-secondary">{{ exam.questions.count }}</span></td>
+                                            <td>
+                                                {% if exam.status == 'active' %}
+                                                    <span class="badge badge-success">Active</span>
+                                                {% else %}
+                                                    <span class="badge badge-danger">Inactive</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="alert alert-info">No exams created yet.</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enrolled Students -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card shadow">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="fas fa-users"></i> Enrolled Students ({{ enrollments|length }})</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if enrollments %}
+                            <div class="table-responsive">
+                                <table class="table table-hover table-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Roll Number</th>
+                                            <th>Name</th>
+                                            <th>Department</th>
+                                            <th>Subject</th>
+                                            <th>Enrollment Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for enrollment in enrollments %}
+                                        <tr>
+                                            <td>{{ enrollment.student.roll_number }}</td>
+                                            <td>{{ enrollment.student.user.get_full_name }}</td>
+                                            <td>{{ enrollment.student.department }}</td>
+                                            <td>{{ enrollment.subject.name }}</td>
+                                            <td>{{ enrollment.enrolled_at|date:"d M Y" }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="alert alert-info">No students enrolled yet.</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .badge-lg {
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .border-left {
+        border-left: 4px solid;
+    }
+
+    .border-primary {
+        border-color: #007bff;
+    }
+</style>
+{% endblock %}

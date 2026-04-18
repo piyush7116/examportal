@@ -1,0 +1,106 @@
+{% extends "student/student_base.html" %}
+{% block title %}Student Dashboard{% endblock %}
+{% block nav_home %}active{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Welcome, {{ user.get_full_name|default:user.username }}! 👋</h1>
+  <p>{{ profile.roll_number }} &mdash; {{ profile.department }}, {{ profile.semester }}</p>
+</div>
+
+<!-- Stats -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="stat-card"><p>Exams Taken</p><h2>{{ exams_taken }}</h2></div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card green"><p>Practice Sessions</p><h2>{{ practice_count }}</h2></div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card purple"><p>Subjects Available</p><h2>{{ subjects.count }}</h2></div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card orange"><p>Notifications</p><h2>{{ notifications.count }}</h2></div>
+  </div>
+</div>
+
+<!-- Feature Quick Access -->
+<h5 class="fw-700 mb-3" style="font-weight:700;">Quick Access</h5>
+<div class="row g-3 mb-4">
+  <div class="col-12 col-md-4">
+    <a href="/student/features/" class="text-decoration-none">
+      <div class="action-card blue p-3 rounded-3">
+        <i class="bi bi-grid-fill fs-4 mb-2 d-block"></i>
+        <div class="fw-600">All Features</div>
+        <small style="opacity:.8;">Access all tools</small>
+      </div>
+    </a>
+  </div>
+  <div class="col-12 col-md-4">
+    <a href="/student/exams/" class="text-decoration-none">
+      <div class="action-card green p-3 rounded-3">
+        <i class="bi bi-file-earmark-check-fill fs-4 mb-2 d-block"></i>
+        <div class="fw-600">Take Exam</div>
+        <small style="opacity:.8;">Attempt scheduled exams</small>
+      </div>
+    </a>
+  </div>
+  <div class="col-12 col-md-4">
+    <a href="/student/practice/" class="text-decoration-none">
+      <div class="action-card purple p-3 rounded-3">
+        <i class="bi bi-lightbulb-fill fs-4 mb-2 d-block"></i>
+        <div class="fw-600">Practice Questions</div>
+        <small style="opacity:.8;">AI-generated practice</small>
+      </div>
+    </a>
+  </div>
+</div>
+
+<div class="row g-3">
+  <!-- Recent Attempts -->
+  <div class="col-12 col-md-7">
+    <div class="card-portal p-4">
+      <h6 class="fw-700 mb-3" style="font-weight:700;"><i class="bi bi-clock-history me-2 text-primary"></i>Recent Exam Attempts</h6>
+      {% if recent_attempts %}
+        <table class="table table-hover mb-0">
+          <thead><tr><th>Exam</th><th>Score</th><th>%</th><th>Date</th></tr></thead>
+          <tbody>
+          {% for a in recent_attempts %}
+            <tr>
+              <td>{{ a.exam.title }}</td>
+              <td>{{ a.score }}/{{ a.total }}</td>
+              <td>
+                <span class="badge {% if a.percentage >= 60 %}bg-success{% else %}bg-danger{% endif %}">
+                  {{ a.percentage }}%
+                </span>
+              </td>
+              <td>{{ a.attempted_at|date:"d M Y" }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        <a href="/student/history/" class="btn btn-sm btn-outline-primary mt-2">View All</a>
+      {% else %}
+        <div class="text-center py-4 text-muted"><i class="bi bi-inbox fs-2 d-block mb-2"></i>No exams attempted yet</div>
+      {% endif %}
+    </div>
+  </div>
+  <!-- Notifications -->
+  <div class="col-12 col-md-5">
+    <div class="card-portal p-4">
+      <h6 class="fw-700 mb-3" style="font-weight:700;"><i class="bi bi-bell-fill me-2 text-warning"></i>Important Notifications</h6>
+      {% for n in notifications %}
+        <div class="d-flex align-items-start mb-3">
+          <span class="badge-{{ n.priority }} me-2 mt-1">{{ n.priority|title }}</span>
+          <div>
+            <div style="font-weight:600;font-size:.88rem;">{{ n.title }}</div>
+            <div style="font-size:.8rem;color:#94a3b8;">{{ n.created_at|date:"d M Y" }}</div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="text-center py-3 text-muted"><i class="bi bi-bell-slash fs-2 d-block mb-2"></i>No notifications</div>
+      {% endfor %}
+      <a href="/student/notifications/" class="btn btn-sm btn-outline-warning mt-1">View All</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

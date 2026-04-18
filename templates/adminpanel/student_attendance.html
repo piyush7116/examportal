@@ -1,0 +1,24 @@
+{% extends "base/base.html" %}{% block title %}Student Attendance{% endblock %}
+{% block nav_links %}<li class="nav-item"><a class="nav-link" href="/adminpanel/">Dashboard</a></li><li class="nav-item"><a class="nav-link" href="/adminpanel/students/">Students</a></li>{% endblock %}
+{% block content %}
+<div class="page-header"><h1>Student Attendance</h1><p>Exam attendance and submission records</p></div>
+<div class="table-portal">
+  <table class="table table-hover mb-0">
+    <thead><tr><th>Student</th><th>Roll No</th><th>Exam</th><th>Score</th><th>%</th><th>Date</th></tr></thead>
+    <tbody>
+    {% for a in attempts %}
+    <tr>
+      <td>{{ a.student.user.get_full_name }}</td>
+      <td>{{ a.student.roll_number }}</td>
+      <td>{{ a.exam.title }}</td>
+      <td>{{ a.score }}/{{ a.total }}</td>
+      <td><span class="badge {% if a.percentage >= 60 %}bg-success{% else %}bg-danger{% endif %}">{{ a.percentage }}%</span></td>
+      <td>{{ a.attempted_at|date:"d M Y" }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6" class="text-center text-muted py-4">No exam attempts recorded yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

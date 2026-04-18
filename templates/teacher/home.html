@@ -1,0 +1,148 @@
+{% extends "teacher/teacher_base.html" %}
+{% block nav_home %}active{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Welcome, {{ user.get_full_name|default:user.username }}! 👋</h1>
+  <p>{{ profile.employee_id }} &mdash; {{ profile.department }}, {{ profile.designation }}</p>
+</div>
+
+<!-- Enhanced Statistics -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3"><div class="stat-card"><p>Students Enrolled</p><h2>{{ total_students }}</h2></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card green"><p>Exams Created</p><h2>{{ total_exams }}</h2></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card orange"><p>Total Questions</p><h2>{{ total_questions }}</h2></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card purple"><p>Class Average</p><h2>{{ avg_marks }}/100</h2></div></div>
+</div>
+
+<!-- Enhanced Quick Actions -->
+<h5 style="font-weight:700;margin-bottom:16px;"><i class="fas fa-bolt"></i> Quick Actions & Tools</h5>
+<div class="row g-3 mb-4">
+  <div class="col-12 col-md-3">
+    <a href="{% url 'teacher:student_performance' %}" class="text-decoration-none">
+      <div class="action-card" style="background:linear-gradient(135deg,#667eea,#764ba2);border-radius:14px;padding:24px;color:#fff;text-align:center;">
+        <i class="bi bi-bar-chart fs-3 mb-2 d-block"></i><div style="font-weight:700;">Student Performance</div>
+        <small>View rankings & analytics</small>
+      </div>
+    </a>
+  </div>
+  <div class="col-12 col-md-3">
+    <a href="{% url 'teacher:exam_analytics' %}" class="text-decoration-none">
+      <div class="action-card" style="background:linear-gradient(135deg,#f093fb,#f5576c);border-radius:14px;padding:24px;color:#fff;text-align:center;">
+        <i class="bi bi-graph-up fs-3 mb-2 d-block"></i><div style="font-weight:700;">Exam Analytics</div>
+        <small>Performance metrics</small>
+      </div>
+    </a>
+  </div>
+  <div class="col-12 col-md-3">
+    <a href="/teacher/marks/" class="text-decoration-none">
+      <div class="action-card" style="background:linear-gradient(135deg,#4facfe,#00f2fe);border-radius:14px;padding:24px;color:#fff;text-align:center;">
+        <i class="bi bi-pencil-square fs-3 mb-2 d-block"></i><div style="font-weight:700;">Manage Marks</div>
+        <small>Upload & manage grades</small>
+      </div>
+    </a>
+  </div>
+  <div class="col-12 col-md-3">
+    <a href="{% url 'teacher:create_exam' %}" class="text-decoration-none">
+      <div class="action-card" style="background:linear-gradient(135deg,#43e97b,#38f9d7);border-radius:14px;padding:24px;color:#fff;text-align:center;">
+        <i class="bi bi-file-earmark-plus fs-3 mb-2 d-block"></i><div style="font-weight:700;">Create Exam</div>
+        <small>New online exam</small>
+      </div>
+    </a>
+  </div>
+  <div class="col-12 col-md-3">
+    <a href="{% url 'teacher:marks_list' %}" class="text-decoration-none">
+      <div class="action-card" style="background:linear-gradient(135deg,#f6d365,#fda085);border-radius:14px;padding:24px;color:#fff;text-align:center;">
+        <i class="bi bi-person-plus fs-3 mb-2 d-block"></i><div style="font-weight:700;">Enroll Students</div>
+        <small>Add students to subjects</small>
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- Subject Management & Stats -->
+<div class="row g-4">
+  <div class="col-12 col-lg-7">
+    <div class="card-portal p-4">
+      <h6 style="font-weight:700;margin-bottom:16px;"><i class="fas fa-book"></i> Your Subjects & Enrollment</h6>
+      {% if subject_stats %}
+        {% for stat in subject_stats %}
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+          <div>
+            <div style="font-weight:600;font-size:1rem;">{{ stat.subject.name }}</div>
+            <small class="text-muted"><i class="fas fa-users"></i> {{ stat.students }} students enrolled</small>
+          </div>
+          <div class="text-right">
+            <span class="badge badge-pill badge-primary">{{ stat.exams }} exams</span>
+            <a href="{% url 'teacher:subject_analytics' stat.subject.id %}" class="btn btn-sm btn-outline-primary ms-2">View</a>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="text-muted text-center py-4">
+          <i class="fas fa-inbox fa-2x mb-2 d-block"></i>
+          No subjects assigned yet. Enroll students to get started.
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-5">
+    <div class="card-portal p-4">
+      <h6 style="font-weight:700;margin-bottom:16px;"><i class="fas fa-bell"></i> Recent Notifications</h6>
+      {% for n in notifications %}
+      <div class="d-flex gap-2 mb-3">
+        <span class="badge-{{ n.priority }} mt-1">●</span>
+        <div style="width:100%;">
+          <div style="font-weight:600;font-size:.88rem;">{{ n.title }}</div>
+          <small class="text-muted d-block">{{ n.created_at|date:"d M Y, H:i" }}</small>
+        </div>
+      </div>
+      {% empty %}
+      <div class="text-muted text-center py-4">
+        <i class="fas fa-bell-slash fa-2x mb-2 d-block"></i>
+        No notifications yet.
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Recent Exam Attempts -->
+{% if recent_attempts %}
+<div class="row g-4 mt-2">
+  <div class="col-12">
+    <div class="card-portal p-4">
+      <h6 style="font-weight:700;margin-bottom:16px;"><i class="fas fa-history"></i> Recent Exam Attempts</h6>
+      <div style="overflow-x:auto;">
+        <table class="table table-sm table-hover mb-0">
+          <thead>
+            <tr style="border-bottom:2px solid #e5e7eb;">
+              <th style="font-weight:600;">Student</th>
+              <th style="font-weight:600;">Exam</th>
+              <th style="font-weight:600;">Score</th>
+              <th style="font-weight:600;">%</th>
+              <th style="font-weight:600;">Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for attempt in recent_attempts %}
+            <tr>
+              <td>{{ attempt.student.user.first_name }} {{ attempt.student.user.last_name }}</td>
+              <td>{{ attempt.exam.title|truncatewords:3 }}</td>
+              <td>{{ attempt.score }}/{{ attempt.total }}</td>
+              <td>
+                <span class="badge {% if attempt.percentage >= 70 %}badge-success{% elif attempt.percentage >= 50 %}badge-warning{% else %}badge-danger{% endif %}">
+                  {{ attempt.percentage }}%
+                </span>
+              </td>
+              <td style="font-size:.8rem;">{{ attempt.attempted_at|date:"d M" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

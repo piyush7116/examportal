@@ -1,0 +1,269 @@
+{% extends "student/student_base.html" %}
+{% load static %}
+
+{% block title %}My Marks - Student{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2 class="mb-3">📊 My Marks & Progress</h2>
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> 
+                Marks breakdown by subject: <strong>Theory (50%) + MCQ (30%) + Quizzes (10%) + Assignments (10%)</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overall Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center" style="border-left: 4px solid #28a745;">
+                <div class="card-body">
+                    <h5 class="card-title">📚 Total Subjects</h5>
+                    <h2 class="text-success">{{ marks_by_subject|length }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center" style="border-left: 4px solid #007bff;">
+                <div class="card-body">
+                    <h5 class="card-title">✅ Marks Received</h5>
+                    <h2 class="text-primary">
+                        {% with total=marks_by_subject|sum_marks %}
+                            {{ total|floatformat:1 }}
+                        {% endwith %}
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center" style="border-left: 4px solid #ffc107;">
+                <div class="card-body">
+                    <h5 class="card-title">📈 Average Score</h5>
+                    <h2 class="text-warning">
+                        {% with avg=marks_by_subject|avg_marks %}
+                            {{ avg|floatformat:1 }}%
+                        {% endwith %}
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center" style="border-left: 4px solid #17a2b8;">
+                <div class="card-body">
+                    <h5 class="card-title">👨‍🎓 Enrolled Subjects</h5>
+                    <h2 class="text-info">{{ total_enrollments }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Marks by Subject -->
+    {% for subject_marks in marks_by_subject %}
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1">📖 {{ subject_marks.subject.name }}</h5>
+                            <small>👨‍🏫 Teacher: {{ subject_marks.teacher.get_full_name }}</small>
+                        </div>
+                        {% if subject_marks.total_record %}
+                        <div class="text-end">
+                            <h3 class="mb-0" style="color: #ffd700;">{{ subject_marks.total_record|add_all }}</h3>
+                            <small>/100</small>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Progress Bars -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <p class="mb-2"><strong>📝 Theory Exam: {{ subject_marks.theory.total|floatformat:1 }}/50</strong></p>
+                            <div class="progress mb-3" style="height: 20px;">
+                                <div class="progress-bar bg-success" role="progressbar" 
+                                     style="width: {{ subject_marks.theory.total|percentage:50 }}%;">
+                                    {{ subject_marks.theory.total|percentage:50|floatformat:0 }}%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-2"><strong>❓ MCQ Exam: {{ subject_marks.mcq.total|floatformat:1 }}/30</strong></p>
+                            <div class="progress mb-3" style="height: 20px;">
+                                <div class="progress-bar bg-info" role="progressbar" 
+                                     style="width: {{ subject_marks.mcq.total|percentage:30 }}%;">
+                                    {{ subject_marks.mcq.total|percentage:30|floatformat:0 }}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <p class="mb-2"><strong>❓ Quizzes: {{ subject_marks.quiz.total|floatformat:1 }}/10</strong></p>
+                            <div class="progress mb-3" style="height: 20px;">
+                                <div class="progress-bar bg-warning" role="progressbar" 
+                                     style="width: {{ subject_marks.quiz.total|percentage:10 }}%;">
+                                    {{ subject_marks.quiz.total|percentage:10|floatformat:0 }}%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-2"><strong>📋 Assignments: {{ subject_marks.assignment.total|floatformat:1 }}/10</strong></p>
+                            <div class="progress mb-3" style="height: 20px;">
+                                <div class="progress-bar bg-danger" role="progressbar" 
+                                     style="width: {{ subject_marks.assignment.total|percentage:10 }}%;">
+                                    {{ subject_marks.assignment.total|percentage:10|floatformat:0 }}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Marks -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="mb-3">📝 Theory Exams</h6>
+                            {% if subject_marks.theory.marks %}
+                                <ul class="list-unstyled">
+                                    {% for mark in subject_marks.theory.marks %}
+                                        <li class="mb-2 p-2 bg-light rounded">
+                                            <strong>{{ mark.exam_name }}</strong><br>
+                                            Marks: <span class="badge bg-success">{{ mark.marks_obtained }}/{{ mark.total_marks }}</span><br>
+                                            {% if mark.remarks %}<small class="text-muted">{{ mark.remarks }}</small>{% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-muted">No theory exam marks yet</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <h6 class="mb-3">📋 Assignments</h6>
+                            {% if subject_marks.assignment.marks %}
+                                <ul class="list-unstyled">
+                                    {% for mark in subject_marks.assignment.marks %}
+                                        <li class="mb-2 p-2 bg-light rounded">
+                                            <strong>{{ mark.assignment_name }}</strong><br>
+                                            Marks: <span class="badge bg-danger">{{ mark.marks_obtained }}/{{ mark.total_marks }}</span><br>
+                                            {% if mark.remarks %}<small class="text-muted">{{ mark.remarks }}</small>{% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-muted">No assignment marks yet</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="mb-3">❓ Quizzes</h6>
+                            {% if subject_marks.quiz.marks %}
+                                <ul class="list-unstyled">
+                                    {% for mark in subject_marks.quiz.marks %}
+                                        <li class="mb-2 p-2 bg-light rounded">
+                                            <strong>{{ mark.quiz_name }}</strong><br>
+                                            Marks: <span class="badge bg-warning">{{ mark.marks_obtained }}/{{ mark.total_marks }}</span><br>
+                                            {% if mark.remarks %}<small class="text-muted">{{ mark.remarks }}</small>{% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-muted">No quiz marks yet</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <h6 class="mb-3">❓ MCQ Exams</h6>
+                            {% if subject_marks.mcq.marks %}
+                                <ul class="list-unstyled">
+                                    {% for mark in subject_marks.mcq.marks %}
+                                        <li class="mb-2 p-2 bg-light rounded">
+                                            <strong>MCQ Exam</strong><br>
+                                            Marks: <span class="badge bg-info">{{ mark.marks_obtained }}/30</span>
+                                            ({{ mark.correct_answers }}/{{ mark.total_questions }} correct)<br>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-muted">No MCQ exam marks yet</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% if not marks_by_subject %}
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle"></i> 
+        You are not enrolled in any subjects yet. Please contact your administrator.
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .progress {
+        background-color: #e9ecef;
+        border-radius: 4px;
+    }
+    .card {
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+</style>
+
+<!-- Custom filters for template -->
+{% comment %}
+Add these to your Django template tags if not already present:
+
+@register.filter
+def sum_marks(marks_list):
+    total = 0
+    for item in marks_list:
+        if hasattr(item, 'theory') and hasattr(item['theory'], 'total'):
+            total += item['theory']['total']
+        if hasattr(item, 'mcq') and hasattr(item['mcq'], 'total'):
+            total += item['mcq']['total']
+        if hasattr(item, 'assignment') and hasattr(item['assignment'], 'total'):
+            total += item['assignment']['total']
+        if hasattr(item, 'quiz') and hasattr(item['quiz'], 'total'):
+            total += item['quiz']['total']
+    return total
+
+@register.filter
+def avg_marks(marks_list):
+    if not marks_list:
+        return 0
+    total = 0
+    for item in marks_list:
+        total += (item['theory']['total'] + item['mcq']['total'] + 
+                 item['assignment']['total'] + item['quiz']['total'])
+    return (total / len(marks_list) / 100) * 100
+
+@register.filter
+def percentage(value, max_value):
+    if max_value == 0:
+        return 0
+    return (value / float(max_value)) * 100
+
+@register.filter
+def add_all(obj):
+    if hasattr(obj, '__dict__'):
+        return sum([obj.theory_marks, obj.mcq_marks, obj.quiz_marks, obj.assignment_marks])
+    return 0
+{% endcomment %}
+{% endblock %}

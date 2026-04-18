@@ -1,0 +1,219 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Student Marks - {{ subject.name }}</h4>
+                    <a href="{% url 'teacher:marks_dashboard' subject.id %}" class="btn btn-light btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+                <div class="card-body">
+                    <!-- Student Info -->
+                    <div class="alert alert-light border">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Roll Number:</strong> {{ student.roll_number }}</p>
+                                <p><strong>Name:</strong> {{ student.user.get_full_name }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Department:</strong> {{ student.department }}</p>
+                                <p><strong>Semester:</strong> {{ student.semester }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Overall Total Marks -->
+                    {% if total_marks %}
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card border-success">
+                                <div class="card-body">
+                                    <div class="row text-center">
+                                        <div class="col-md-3">
+                                            <h6 class="text-muted">Theory Marks</h6>
+                                            <h4 class="text-success">{{ total_marks.theory_marks|floatformat:1 }}</h4>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <h6 class="text-muted">MCQ Marks</h6>
+                                            <h4 class="text-info">{{ total_marks.mcq_marks|floatformat:1 }}</h4>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <h6 class="text-muted">Quiz Marks</h6>
+                                            <h4 class="text-warning">{{ total_marks.quiz_marks|floatformat:1 }}</h4>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <h6 class="text-muted">Assignment Marks</h6>
+                                            <h4 class="text-danger">{{ total_marks.assignment_marks|floatformat:1 }}</h4>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="text-center">
+                                        <h3><strong>Total: {{ total_marks.total_marks|floatformat:1 }}/100</strong></h3>
+                                        <p class="text-muted">Last Updated: {{ total_marks.last_updated|date:"d M Y, H:i" }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <hr class="my-4">
+
+                    <!-- Theory Exam Marks -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="mb-3"><i class="fas fa-pen-fancy text-info"></i> Theory Exam Marks</h5>
+                            {% if theory_marks %}
+                            <div class="table-responsive">
+                                <table class="table table-hover table-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Exam Name</th>
+                                            <th>Marks Obtained</th>
+                                            <th>Total Marks</th>
+                                            <th>Percentage</th>
+                                            <th>Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for mark in theory_marks %}
+                                        <tr>
+                                            <td>{{ mark.exam_name }}</td>
+                                            <td><strong>{{ mark.marks_obtained|floatformat:1 }}</strong></td>
+                                            <td>{{ mark.total_marks|floatformat:1 }}</td>
+                                            <td>
+                                                {% widthratio mark.marks_obtained mark.total_marks 100 %}%
+                                            </td>
+                                            <td>{{ mark.remarks }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="alert alert-info">No theory marks recorded yet</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- MCQ Marks -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="mb-3"><i class="fas fa-check-square text-success"></i> MCQ Marks (30 Questions)</h5>
+                            {% if mcq_marks %}
+                            <div class="table-responsive">
+                                <table class="table table-hover table-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Exam</th>
+                                            <th>Marks Obtained</th>
+                                            <th>Correct Answers</th>
+                                            <th>Total Questions</th>
+                                            <th>Percentage</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for mark in mcq_marks %}
+                                        <tr>
+                                            <td>{{ mark.exam.title }}</td>
+                                            <td><strong>{{ mark.marks_obtained|floatformat:1 }}</strong></td>
+                                            <td>{{ mark.correct_answers }}/{{ mark.total_questions }}</td>
+                                            <td>{{ mark.total_questions }}</td>
+                                            <td>
+                                                {% widthratio mark.marks_obtained 30 100 %}%
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="alert alert-info">No MCQ marks recorded yet</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Quiz Marks -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="mb-3"><i class="fas fa-question-circle text-warning"></i> Quiz Marks</h5>
+                            {% if quiz_marks %}
+                            <div class="table-responsive">
+                                <table class="table table-hover table-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Quiz Name</th>
+                                            <th>Marks Obtained</th>
+                                            <th>Total Marks</th>
+                                            <th>Percentage</th>
+                                            <th>Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for mark in quiz_marks %}
+                                        <tr>
+                                            <td>{{ mark.quiz_name }}</td>
+                                            <td><strong>{{ mark.marks_obtained|floatformat:1 }}</strong></td>
+                                            <td>{{ mark.total_marks|floatformat:1 }}</td>
+                                            <td>
+                                                {% widthratio mark.marks_obtained mark.total_marks 100 %}%
+                                            </td>
+                                            <td>{{ mark.remarks }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="alert alert-info">No quiz marks recorded yet</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Assignment Marks -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="mb-3"><i class="fas fa-tasks text-danger"></i> Assignment Marks</h5>
+                            {% if assignment_marks %}
+                            <div class="table-responsive">
+                                <table class="table table-hover table-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Assignment Name</th>
+                                            <th>Marks Obtained</th>
+                                            <th>Total Marks</th>
+                                            <th>Percentage</th>
+                                            <th>Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for mark in assignment_marks %}
+                                        <tr>
+                                            <td>{{ mark.assignment_name }}</td>
+                                            <td><strong>{{ mark.marks_obtained|floatformat:1 }}</strong></td>
+                                            <td>{{ mark.total_marks|floatformat:1 }}</td>
+                                            <td>
+                                                {% widthratio mark.marks_obtained mark.total_marks 100 %}%
+                                            </td>
+                                            <td>{{ mark.remarks }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="alert alert-info">No assignment marks recorded yet</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

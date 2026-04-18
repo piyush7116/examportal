@@ -1,0 +1,7 @@
+{% extends "base/base.html" %}
+{% block nav_links %}
+<li class="nav-item"><a class="nav-link {% block nav_home %}{% endblock %}" href="{% url 'student:home' %}"><i class="bi bi-house me-1"></i>Home</a></li>
+<li class="nav-item"><a class="nav-link {% block nav_history %}{% endblock %}" href="{% url 'student:history' %}"><i class="bi bi-clock-history me-1"></i>History</a></li>
+<li class="nav-item"><a class="nav-link {% block nav_marks %}{% endblock %}" href="{% url 'student:view_marks' %}"><i class="bi bi-award me-1"></i>My Marks</a></li>
+<li class="nav-item"><a class="nav-link {% block nav_acc %}{% endblock %}" href="{% url 'student:account' %}"><i class="bi bi-person-circle me-1"></i>Account</a></li>
+{% endblock %}

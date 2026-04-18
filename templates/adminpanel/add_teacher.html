@@ -1,0 +1,95 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0"><i class="fas fa-user-plus"></i> Add New Teacher</h4>
+                    <a href="{% url 'adminpanel:teachers_manage' %}" class="btn btn-light btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="first_name" class="form-label"><strong>First Name *</strong></label>
+                                    <input type="text" id="first_name" name="first_name" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="last_name" class="form-label"><strong>Last Name *</strong></label>
+                                    <input type="text" id="last_name" name="last_name" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="employee_id" class="form-label"><strong>Employee ID *</strong></label>
+                                    <input type="text" id="employee_id" name="employee_id" class="form-control" placeholder="Unique ID" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email" class="form-label"><strong>Email *</strong></label>
+                                    <input type="email" id="email" name="email" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="phone" class="form-label"><strong>Phone</strong></label>
+                                    <input type="tel" id="phone" name="phone" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="department" class="form-label"><strong>Department *</strong></label>
+                                    <input type="text" id="department" name="department" class="form-control" placeholder="e.g., Computer Science" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="designation" class="form-label"><strong>Designation *</strong></label>
+                                    <input type="text" id="designation" name="designation" class="form-control" placeholder="e.g., Assistant Professor" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="password" class="form-label"><strong>Password *</strong></label>
+                                    <input type="password" id="password" name="password" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-save"></i> Add Teacher
+                            </button>
+                            <a href="{% url 'adminpanel:teachers_manage' %}" class="btn btn-secondary btn-lg">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

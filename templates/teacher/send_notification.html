@@ -1,0 +1,16 @@
+{% extends "base/base.html" %}{% block title %}Send Notification{% endblock %}
+{% block nav_links %}<li class="nav-item"><a class="nav-link" href="/teacher/">Home</a></li><li class="nav-item"><a class="nav-link" href="/teacher/features/">Features</a></li>{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-12 col-md-7">
+<div class="card-portal p-4">
+  <h4 style="font-weight:700;margin-bottom:20px;"><i class="bi bi-bell-fill me-2" style="color:#f59e0b;"></i>Send Notification to Students</h4>
+  <form method="post">{% csrf_token %}
+    <div class="mb-3"><label class="form-label">Title</label><input type="text" name="title" class="form-control" required/></div>
+    <div class="mb-3"><label class="form-label">Message</label><textarea name="message" class="form-control" rows="4" required></textarea></div>
+    <div class="mb-4"><label class="form-label">Priority</label>
+      <select name="priority" class="form-select"><option value="high">High</option><option value="medium" selected>Medium</option><option value="low">Low</option></select>
+    </div>
+    <button type="submit" class="btn btn-warning-portal">Send Notification</button>
+  </form>
+</div></div></div>
+{% endblock %}

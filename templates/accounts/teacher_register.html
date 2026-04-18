@@ -1,0 +1,74 @@
+{% extends "accounts/auth_base.html" %}
+{% block title %}Teacher Register{% endblock %}
+{% block card_width %}580px{% endblock %}
+{% block focus_color %}#f59e0b{% endblock %}
+{% block focus_shadow %}rgba(245,158,11,.12){% endblock %}
+{% block btn_bg %}linear-gradient(90deg,#d97706,#f59e0b){% endblock %}
+{% block link_color %}#f59e0b{% endblock %}
+{% block auth_content %}
+<div class="auth-icon" style="background:#fef3c7;color:#f59e0b;">
+  <i class="bi bi-person-video3"></i>
+</div>
+<h2>Teacher Registration</h2>
+<p class="subtitle">Create your teacher account</p>
+<form method="post">
+  {% csrf_token %}
+  <div class="form-row mb-3">
+    <div class="form-group">
+      <label class="form-label">First Name</label>
+      <input type="text" name="first_name" class="form-control" placeholder="First name" required/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Last Name</label>
+      <input type="text" name="last_name" class="form-control" placeholder="Last name" required/>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Employee ID</label>
+    <input type="text" name="employee_id" class="form-control" placeholder="e.g. EMP2024001" required/>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Official Email</label>
+    <input type="email" name="email" class="form-control" placeholder="teacher@college.edu"/>
+  </div>
+  <div class="form-row mb-3">
+    <div class="form-group">
+      <label class="form-label">Department</label>
+      <select name="department" class="form-select">
+        <option value="">Select</option>
+        <option>Computer Science</option><option>Electronics &amp; Communication</option>
+        <option>Mechanical Engineering</option><option>Civil Engineering</option>
+        <option>Information Technology</option><option>Mathematics</option><option>Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Designation</label>
+      <select name="designation" class="form-select">
+        <option value="">Select</option>
+        <option>Assistant Professor</option><option>Associate Professor</option>
+        <option>Professor</option><option>Head of Department</option><option>Lecturer</option>
+      </select>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Subjects You Teach</label>
+    <input type="text" name="subjects" class="form-control" placeholder="e.g. Data Structures, DBMS"/>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Phone Number</label>
+    <input type="tel" name="phone" class="form-control" placeholder="+91 9876543210"/>
+  </div>
+  <div class="form-row mb-4">
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input type="password" name="password" class="form-control" placeholder="Create password" required/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Confirm Password</label>
+      <input type="password" name="confirm_password" class="form-control" placeholder="Confirm" required/>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-submit">Register as Teacher</button>
+</form>
+<div class="switch-link">Already registered? <a href="/teacher/login/" style="color:#f59e0b;">Login here</a></div>
+{% endblock %}

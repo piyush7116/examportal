@@ -1,0 +1,71 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0"><i class="bi bi-person-plus-fill"></i> Manual Enrollment - {{ student.user.get_full_name }}</h4>
+                    <a href="{% url 'adminpanel:student_activity' student.id %}" class="btn btn-light btn-sm">
+                        <i class="bi bi-arrow-left"></i> Back
+                    </a>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label for="subject" class="form-label"><strong>Select Subject *</strong></label>
+                            <select name="subject" id="subject" class="form-select" required>
+                                <option value="">-- Choose Subject --</option>
+                                {% for subject in subjects %}
+                                    <option value="{{ subject.id }}">{{ subject.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <small class="text-muted">Choose the course the student should be enrolled in.</small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="teacher" class="form-label"><strong>Select Teacher *</strong></label>
+                            <select name="teacher" id="teacher" class="form-select" required>
+                                <option value="">-- Choose Teacher --</option>
+                                {% for teacher in teachers %}
+                                    <option value="{{ teacher.id }}">{{ teacher.get_full_name }} ({{ teacher.teacher_profile.department }})</option>
+                                {% endfor %}
+                            </select>
+                            <small class="text-muted">Select the instructor who will manage this student's marks.</small>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-check-circle"></i> Complete Enrollment
+                            </button>
+                            <a href="{% url 'adminpanel:student_activity' student.id %}" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mt-4 border-info">
+                <div class="card-body">
+                    <h6 class="text-info"><i class="bi bi-info-circle-fill"></i> Pro-Tip: Auto-Enrollment</h6>
+                    <p class="mb-0 text-muted" style="font-size: 0.9rem;">
+                        Manual enrollment is for exceptions. Usually, students are automatically enrolled in subjects taught by teachers of their same department <strong>({{ student.department }})</strong>.
+                    </p>
+                    <div class="mt-3">
+                        <a href="{% url 'adminpanel:trigger_auto_enroll' student.id %}" class="btn btn-sm btn-info text-white">
+                            <i class="bi bi-lightning-fill"></i> Strictly Force Auto-Enroll Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

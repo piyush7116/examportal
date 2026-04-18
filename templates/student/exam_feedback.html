@@ -1,0 +1,237 @@
+{% extends "student/student_base.html" %}
+{% load static %}
+
+{% block title %}Exam Feedback - {{ exam.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Exam Header -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="mb-1">{{ exam.title }}</h2>
+                            <p class="mb-0">📚 {{ exam.subject.name }} | 📅 {{ attempt.attempted_at|date:"M d, Y H:i" }}</p>
+                        </div>
+                        <div class="text-end">
+                            <h1 style="font-size: 3rem; margin: 0;">{{ attempt.score }}/{{ attempt.total }}</h1>
+                            <h4 style="margin: 0;">{{ percentage|floatformat:1 }}%</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Score Summary -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">✅ Correct Answers</h5>
+                    <h2 class="text-success">{{ correct_count }}</h2>
+                    <p class="text-muted">Out of {{ total_questions }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">❌ Wrong Answers</h5>
+                    <h2 class="text-danger">{{ total_questions|add:"-"|add:correct_count }}</h2>
+                    <p class="text-muted">Out of {{ total_questions }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">📊 Success Rate</h5>
+                    <h2 class="text-info">{{ percentage|floatformat:1 }}%</h2>
+                    <p class="text-muted">Performance</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Performance Indicator -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="progress" style="height: 25px;">
+                        {% if percentage >= 80 %}
+                            <div class="progress-bar bg-success" role="progressbar" 
+                                 style="width: {{ percentage }}%;" 
+                                 aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100">
+                                <strong style="color: white;">Excellent! {{ percentage|floatformat:1 }}%</strong>
+                            </div>
+                        {% elif percentage >= 60 %}
+                            <div class="progress-bar bg-info" role="progressbar" 
+                                 style="width: {{ percentage }}%;" 
+                                 aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100">
+                                <strong style="color: white;">Good! {{ percentage|floatformat:1 }}%</strong>
+                            </div>
+                        {% elif percentage >= 40 %}
+                            <div class="progress-bar bg-warning" role="progressbar" 
+                                 style="width: {{ percentage }}%;" 
+                                 aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100">
+                                <strong style="color: white;">Average {{ percentage|floatformat:1 }}%</strong>
+                            </div>
+                        {% else %}
+                            <div class="progress-bar bg-danger" role="progressbar" 
+                                 style="width: {{ percentage }}%;" 
+                                 aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100">
+                                <strong style="color: white;">Needs Improvement {{ percentage|floatformat:1 }}%</strong>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Feedback -->
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="mb-4">📋 Detailed Feedback</h3>
+
+            {% for feedback in feedback_data %}
+            <div class="card mb-3">
+                <div class="card-header {% if feedback.is_correct %}bg-success{% else %}bg-danger{% endif %} text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">
+                                Question {{ forloop.counter }}
+                                {% if feedback.is_correct %}
+                                    <span class="badge bg-light text-success">✓ Correct</span>
+                                {% else %}
+                                    <span class="badge bg-light text-danger">✗ Incorrect</span>
+                                {% endif %}
+                            </h6>
+                        </div>
+                        <div>
+                            <span class="badge bg-light text-dark">{{ feedback.marks_earned }}/{{ feedback.question.marks }} marks</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Question Text -->
+                    <div class="mb-3">
+                        <h5>📌 Question</h5>
+                        <p>{{ feedback.question.text }}</p>
+                    </div>
+
+                    <!-- Options with Feedback -->
+                    <div class="mb-3">
+                        <h5>📍 Options</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Option A -->
+                                <div class="p-3 mb-2 rounded border {% if feedback.question.correct_option == 'A' %}border-success bg-light-success{% elif feedback.student_answer == 'A' %}border-danger bg-light-danger{% else %}border-secondary{% endif %}">
+                                    <strong>A.</strong> {{ feedback.question.option_a }}
+                                    {% if feedback.question.correct_option == 'A' %}
+                                        <span class="badge bg-success float-end">✓ Correct Answer</span>
+                                    {% endif %}
+                                    {% if feedback.student_answer == 'A' and not feedback.is_correct %}
+                                        <span class="badge bg-danger float-end">Your Answer</span>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Option B -->
+                                <div class="p-3 mb-2 rounded border {% if feedback.question.correct_option == 'B' %}border-success bg-light-success{% elif feedback.student_answer == 'B' %}border-danger bg-light-danger{% else %}border-secondary{% endif %}">
+                                    <strong>B.</strong> {{ feedback.question.option_b }}
+                                    {% if feedback.question.correct_option == 'B' %}
+                                        <span class="badge bg-success float-end">✓ Correct Answer</span>
+                                    {% endif %}
+                                    {% if feedback.student_answer == 'B' and not feedback.is_correct %}
+                                        <span class="badge bg-danger float-end">Your Answer</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Option C -->
+                                <div class="p-3 mb-2 rounded border {% if feedback.question.correct_option == 'C' %}border-success bg-light-success{% elif feedback.student_answer == 'C' %}border-danger bg-light-danger{% else %}border-secondary{% endif %}">
+                                    <strong>C.</strong> {{ feedback.question.option_c }}
+                                    {% if feedback.question.correct_option == 'C' %}
+                                        <span class="badge bg-success float-end">✓ Correct Answer</span>
+                                    {% endif %}
+                                    {% if feedback.student_answer == 'C' and not feedback.is_correct %}
+                                        <span class="badge bg-danger float-end">Your Answer</span>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Option D -->
+                                <div class="p-3 mb-2 rounded border {% if feedback.question.correct_option == 'D' %}border-success bg-light-success{% elif feedback.student_answer == 'D' %}border-danger bg-light-danger{% else %}border-secondary{% endif %}">
+                                    <strong>D.</strong> {{ feedback.question.option_d }}
+                                    {% if feedback.question.correct_option == 'D' %}
+                                        <span class="badge bg-success float-end">✓ Correct Answer</span>
+                                    {% endif %}
+                                    {% if feedback.student_answer == 'D' and not feedback.is_correct %}
+                                        <span class="badge bg-danger float-end">Your Answer</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary -->
+                    <div class="alert {% if feedback.is_correct %}alert-success{% else %}alert-danger{% endif %}">
+                        <strong>
+                            {% if feedback.is_correct %}
+                                ✓ You selected the correct answer "{{ feedback.student_answer }}"
+                            {% else %}
+                                ✗ You selected "{{ feedback.student_answer }}", but the correct answer is "{{ feedback.correct_answer }}"
+                            {% endif %}
+                        </strong>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <a href="{% url 'student:exam_list' %}" class="btn btn-primary btn-lg">
+                <i class="bi bi-arrow-left"></i> Back to Exams
+            </a>
+            <a href="{% url 'student:history' %}" class="btn btn-secondary btn-lg">
+                <i class="bi bi-clock-history"></i> View All Attempts
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 1.5rem;
+    }
+    .card-header {
+        border-radius: 8px 8px 0 0;
+    }
+    .bg-light-success {
+        background-color: #d4edda !important;
+    }
+    .bg-light-danger {
+        background-color: #f8d7da !important;
+    }
+    .progress {
+        border-radius: 4px;
+        height: 25px;
+    }
+    .progress-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .badge {
+        padding: 5px 10px;
+    }
+</style>
+{% endblock %}

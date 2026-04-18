@@ -1,0 +1,62 @@
+{% extends "accounts/auth_base.html" %}
+{% block title %}Admin Register{% endblock %}
+{% block card_width %}560px{% endblock %}
+{% block focus_color %}#10b981{% endblock %}
+{% block focus_shadow %}rgba(16,185,129,.12){% endblock %}
+{% block btn_bg %}linear-gradient(90deg,#059669,#10b981){% endblock %}
+{% block link_color %}#10b981{% endblock %}
+{% block auth_content %}
+<div class="auth-icon" style="background:#d1fae5;color:#10b981;"><i class="bi bi-gear-fill"></i></div>
+<h2>Admin Registration</h2>
+<p class="subtitle">Create administrator account</p>
+<form method="post">
+  {% csrf_token %}
+  <div class="form-row mb-3">
+    <div class="form-group">
+      <label class="form-label">First Name</label>
+      <input type="text" name="first_name" class="form-control" placeholder="First name" required/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Last Name</label>
+      <input type="text" name="last_name" class="form-control" placeholder="Last name" required/>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Admin Username</label>
+    <input type="text" name="username" class="form-control" placeholder="Choose a unique username" required/>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Official Email</label>
+    <input type="email" name="email" class="form-control" placeholder="admin@college.edu"/>
+  </div>
+  <div class="form-row mb-3">
+    <div class="form-group">
+      <label class="form-label">Phone</label>
+      <input type="tel" name="phone" class="form-control" placeholder="+91 9876543210"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Role</label>
+      <select name="admin_role" class="form-select">
+        <option>Super Admin</option><option>System Administrator</option>
+        <option>Exam Coordinator</option><option>Department Admin</option>
+      </select>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Secret Key <small class="text-muted">(hint: ADMIN2024)</small></label>
+    <input type="password" name="secret_key" class="form-control" placeholder="Enter secret key" required/>
+  </div>
+  <div class="form-row mb-4">
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input type="password" name="password" class="form-control" placeholder="Create password" required/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Confirm</label>
+      <input type="password" name="confirm_password" class="form-control" placeholder="Confirm" required/>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-submit">Create Admin Account</button>
+</form>
+<div class="switch-link">Already an admin? <a href="/admin-login/" style="color:#10b981;">Login here</a></div>
+{% endblock %}

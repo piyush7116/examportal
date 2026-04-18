@@ -1,0 +1,18 @@
+# Core
+Django==5.2.8
+asgiref==3.10.0
+sqlparse==0.5.3
+
+# Environment and Database
+python-dotenv==1.2.1
+dj-database-url==3.1.2
+psycopg2-binary==2.9.11
+
+# Deployment
+gunicorn==25.3.0
+whitenoise==6.12.0
+
+# Images and Utilities
+Pillow==11.3.0
+python-dateutil==2.9.0.post0
+requests==2.32.5

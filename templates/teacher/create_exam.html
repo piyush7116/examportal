@@ -1,0 +1,90 @@
+{% extends "base/base.html" %}
+{% block title %}Create Exam{% endblock %}
+{% block nav_links %}<li class="nav-item"><a class="nav-link" href="{% url 'teacher:home' %}">Home</a></li><li class="nav-item"><a class="nav-link active" href="{% url 'teacher:create_exam' %}">Create Exam</a></li><li class="nav-item"><a class="nav-link" href="{% url 'teacher:exam_analytics' %}">Exams</a></li>{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1><i class="bi bi-file-earmark-plus me-2 text-primary"></i>Create New Exam</h1>
+  <p>Create a new online exam for your students</p>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-12 col-md-8">
+    <div class="card-portal p-4">
+      <form method="post">
+        {% csrf_token %}
+        
+        <!-- Exam Title -->
+        <div class="mb-4">
+          <label class="form-label fw-600">Exam Title</label>
+          <input type="text" name="title" class="form-control form-control-lg" 
+                 placeholder="e.g., Data Structures Mid-Semester" required/>
+          <small class="text-muted">Enter a descriptive title for the exam</small>
+        </div>
+        
+        <!-- Subject -->
+        <div class="mb-4">
+          <label class="form-label fw-600">Subject</label>
+          <select name="subject" class="form-select form-select-lg" required>
+            <option value="">-- Select Subject --</option>
+            {% for s in subjects %}
+              <option value="{{ s.id }}">{{ s.name }}</option>
+            {% endfor %}
+          </select>
+          <small class="text-muted">Select the subject for this exam</small>
+        </div>
+        
+        <!-- Exam Details -->
+        <div class="row g-3 mb-4">
+          <div class="col-md-4">
+            <label class="form-label fw-600">Exam Password</label>
+            <input type="text" name="password" class="form-control" 
+                   placeholder="e.g., exam2024" required/>
+            <small class="text-muted">Students will need this to access the exam</small>
+          </div>
+          
+          <div class="col-md-4">
+            <label class="form-label fw-600">Duration (minutes)</label>
+            <input type="number" name="duration" class="form-control" 
+                   value="60" min="5" max="300"/>
+            <small class="text-muted">How long students have to complete it</small>
+          </div>
+          
+          <div class="col-md-4">
+            <label class="form-label fw-600">Total Marks</label>
+            <input type="number" name="total_marks" class="form-control" 
+                   value="100" min="1"/>
+            <small class="text-muted">Maximum marks for this exam</small>
+          </div>
+        </div>
+        
+        <!-- Buttons -->
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary-portal btn-lg">
+            <i class="bi bi-plus-circle me-2"></i>Create & Add Questions
+          </button>
+          <a href="{% url 'teacher:exam_analytics' %}" class="btn btn-outline-secondary btn-lg">
+            <i class="bi bi-x-circle me-2"></i>Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .form-control-lg, .form-select-lg {
+    padding: 12px 16px;
+    font-size: 1rem;
+  }
+  
+  .form-label {
+    margin-bottom: 8px;
+    color: #333;
+  }
+  
+  .card-portal {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+</style>
+{% endblock %}

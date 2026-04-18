@@ -1,0 +1,36 @@
+{% extends "student/student_base.html" %}
+{% block title %}Available Exams{% endblock %}
+{% block content %}
+<div class="page-header"><h1>Exam Management</h1><p>Access and attempt your scheduled examinations</p></div>
+<div class="row g-3">
+  {% for exam in exams %}
+  <div class="col-12 col-md-6 col-lg-4">
+    <div class="card-portal p-4">
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <div style="background:#dbeafe;color:#2563eb;width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">
+          <i class="bi bi-file-earmark-check"></i>
+        </div>
+        {% if exam.id in attempted_ids %}
+          <span class="badge bg-success">Completed</span>
+        {% else %}
+          <span class="badge bg-primary">Available</span>
+        {% endif %}
+      </div>
+      <h6 style="font-weight:700;">{{ exam.title }}</h6>
+      <p class="text-muted" style="font-size:.85rem;">Subject: {{ exam.subject.name }}</p>
+      <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#64748b;">
+        <span><i class="bi bi-clock me-1"></i>{{ exam.duration_minutes }} min</span>
+        <span><i class="bi bi-star me-1"></i>{{ exam.total_marks }} marks</span>
+      </div>
+      {% if exam.id in attempted_ids %}
+        <button class="btn btn-outline-secondary btn-sm w-100" disabled>Already Attempted</button>
+      {% else %}
+        <a href="/student/exams/{{ exam.id }}/enter/" class="btn btn-primary-portal btn-sm w-100">Start Exam</a>
+      {% endif %}
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12"><div class="card-portal p-5 text-center text-muted"><i class="bi bi-inbox fs-2 d-block mb-2"></i>No exams available at the moment.</div></div>
+  {% endfor %}
+</div>
+{% endblock %}

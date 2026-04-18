@@ -1,0 +1,35 @@
+{% extends "teacher/teacher_base.html" %}
+{% block title %}Teacher Account{% endblock %}
+{% block nav_acc %}active{% endblock %}
+{% block content %}
+<div class="page-header"><h1>My Account</h1></div>
+<div class="row g-4">
+  <div class="col-12 col-md-4">
+    <div class="card-portal p-4 text-center">
+      <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#d97706,#f59e0b);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:2rem;color:#fff;font-weight:700;">
+        {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+      </div>
+      <h5 style="font-weight:700;">{{ user.get_full_name }}</h5>
+      <p class="text-muted mb-1">ID: {{ profile.employee_id }}</p>
+      <p class="text-muted mb-1">{{ profile.department }}</p>
+      <p class="text-muted">{{ profile.designation }}</p>
+    </div>
+  </div>
+  <div class="col-12 col-md-8">
+    <div class="card-portal p-4">
+      <h6 style="font-weight:700;margin-bottom:20px;">Edit Profile</h6>
+      <form method="post">{% csrf_token %}
+        <div class="row g-3">
+          <div class="col-md-6"><label class="form-label">First Name</label><input type="text" name="first_name" class="form-control" value="{{ user.first_name }}"/></div>
+          <div class="col-md-6"><label class="form-label">Last Name</label><input type="text" name="last_name" class="form-control" value="{{ user.last_name }}"/></div>
+          <div class="col-md-6"><label class="form-label">Department</label><input type="text" name="department" class="form-control" value="{{ profile.department }}"/></div>
+          <div class="col-md-6"><label class="form-label">Designation</label><input type="text" name="designation" class="form-control" value="{{ profile.designation }}"/></div>
+          <div class="col-12"><label class="form-label">Subjects</label><input type="text" name="subjects" class="form-control" value="{{ profile.subjects }}"/></div>
+          <div class="col-md-6"><label class="form-label">Phone</label><input type="tel" name="phone" class="form-control" value="{{ user.phone }}"/></div>
+          <div class="col-12"><button type="submit" class="btn btn-warning-portal">Save Changes</button></div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

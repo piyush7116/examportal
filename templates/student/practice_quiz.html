@@ -1,0 +1,29 @@
+{% extends "student/student_base.html" %}
+{% block title %}Practice — {{ topic }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Practice: {{ topic }}</h1>
+  <p>Subject: {{ subject.name }} &bull; {{ questions|length }} questions</p>
+</div>
+{% if questions %}
+<form method="post">
+  {% csrf_token %}
+  {% for q in questions %}
+  <div class="card-portal p-4 mb-3">
+    <p style="font-weight:600;">Q{{ forloop.counter }}. {{ q.text }}</p>
+    <div class="row g-2">
+      <div class="col-12 col-md-6"><label class="d-flex gap-2 align-items-center p-3 rounded-3 border" style="cursor:pointer;"><input type="radio" name="q_{{ q.id }}" value="A"/> <strong>A.</strong> {{ q.option_a }}</label></div>
+      <div class="col-12 col-md-6"><label class="d-flex gap-2 align-items-center p-3 rounded-3 border" style="cursor:pointer;"><input type="radio" name="q_{{ q.id }}" value="B"/> <strong>B.</strong> {{ q.option_b }}</label></div>
+      <div class="col-12 col-md-6"><label class="d-flex gap-2 align-items-center p-3 rounded-3 border" style="cursor:pointer;"><input type="radio" name="q_{{ q.id }}" value="C"/> <strong>C.</strong> {{ q.option_c }}</label></div>
+      <div class="col-12 col-md-6"><label class="d-flex gap-2 align-items-center p-3 rounded-3 border" style="cursor:pointer;"><input type="radio" name="q_{{ q.id }}" value="D"/> <strong>D.</strong> {{ q.option_d }}</label></div>
+    </div>
+  </div>
+  {% endfor %}
+  <div class="text-center mt-3">
+    <button type="submit" class="btn btn-warning-portal px-5">Submit Practice</button>
+  </div>
+</form>
+{% else %}
+<div class="card-portal p-5 text-center text-muted"><i class="bi bi-inbox fs-2 d-block mb-2"></i>No practice questions available for this topic yet.</div>
+{% endif %}
+{% endblock %}

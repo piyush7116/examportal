@@ -1,0 +1,89 @@
+{% extends "student/student_base.html" %}
+{% block title %}Features — Student{% endblock %}
+{% block nav_feat %}active{% endblock %}
+{% block content %}
+<div class="text-center mb-5">
+  <h1 style="font-weight:700;font-size:2rem;">Explore Our Features</h1>
+  <p class="text-muted">Discover all the powerful tools available to help you succeed in your examinations.</p>
+</div>
+
+<div class="row g-4 mb-5">
+  <div class="col-12 col-md-4">
+    <a href="/student/account/" class="text-decoration-none">
+      <div class="feature-card h-100">
+        <div class="feature-icon" style="background:#dbeafe;color:#2563eb;"><i class="bi bi-person-fill"></i></div>
+        <h5 style="font-weight:700;">User Management</h5>
+        <p class="text-muted" style="font-size:.9rem;">View and manage your profile details including personal information and enrolled subjects.</p>
+        <span style="color:#2563eb;font-weight:600;font-size:.88rem;">Access Feature <i class="bi bi-chevron-right"></i></span>
+      </div>
+    </a>
+  </div>
+  <div class="col-12 col-md-4">
+    <a href="/student/exams/" class="text-decoration-none">
+      <div class="feature-card h-100" style="border-color:#10b981;">
+        <div class="feature-icon" style="background:#d1fae5;color:#10b981;"><i class="bi bi-file-earmark-text-fill"></i></div>
+        <h5 style="font-weight:700;">Exam Management</h5>
+        <p class="text-muted" style="font-size:.9rem;">Access and attempt secured examinations with timer-based assessment.</p>
+        <span style="color:#10b981;font-weight:600;font-size:.88rem;">Access Feature <i class="bi bi-chevron-right"></i></span>
+      </div>
+    </a>
+  </div>
+  <div class="col-12 col-md-4">
+    <a href="/student/practice/" class="text-decoration-none">
+      <div class="feature-card h-100">
+        <div class="feature-icon" style="background:#ede9fe;color:#8b5cf6;"><i class="bi bi-lightbulb-fill"></i></div>
+        <h5 style="font-weight:700;">Question Practice</h5>
+        <p class="text-muted" style="font-size:.9rem;">AI-powered practice questions generated from your syllabus for better preparation.</p>
+        <span style="color:#8b5cf6;font-weight:600;font-size:.88rem;">Access Feature <i class="bi bi-chevron-right"></i></span>
+      </div>
+    </a>
+  </div>
+  <div class="col-12 col-md-4">
+    <a href="/student/history/" class="text-decoration-none">
+      <div class="feature-card h-100">
+        <div class="feature-icon" style="background:#fef3c7;color:#f59e0b;"><i class="bi bi-bar-chart-fill"></i></div>
+        <h5 style="font-weight:700;">History &amp; Marks</h5>
+        <p class="text-muted" style="font-size:.9rem;">Track your examination history, practice sessions, and performance analytics.</p>
+        <span style="color:#f59e0b;font-weight:600;font-size:.88rem;">Access Feature <i class="bi bi-chevron-right"></i></span>
+      </div>
+    </a>
+  </div>
+  <div class="col-12 col-md-4">
+    <a href="/student/notifications/" class="text-decoration-none">
+      <div class="feature-card h-100">
+        <div class="feature-icon" style="background:#fee2e2;color:#ef4444;"><i class="bi bi-bell-fill"></i></div>
+        <h5 style="font-weight:700;">Important Notifications</h5>
+        <p class="text-muted" style="font-size:.9rem;">Stay updated with important announcements, exam schedules, and alerts.</p>
+        <span style="color:#ef4444;font-weight:600;font-size:.88rem;">Access Feature <i class="bi bi-chevron-right"></i></span>
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- How it works -->
+<div class="card-portal p-4 p-md-5">
+  <h4 style="font-weight:700;margin-bottom:24px;">How Our Platform Works</h4>
+  {% for step in "12345" %}
+  {% endfor %}
+  <div class="d-flex gap-3 mb-4">
+    <div style="width:36px;height:36px;border-radius:50%;background:#dbeafe;color:#2563eb;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">1</div>
+    <div><strong>Set Up Your Profile</strong><br><span class="text-muted" style="font-size:.9rem;">Start by reviewing and updating your profile in User Management. Ensure your details are correct and subjects are enrolled.</span></div>
+  </div>
+  <div class="d-flex gap-3 mb-4">
+    <div style="width:36px;height:36px;border-radius:50%;background:#ede9fe;color:#8b5cf6;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">2</div>
+    <div><strong>Practice with AI-Generated Questions</strong><br><span class="text-muted" style="font-size:.9rem;">Use the Question Practice feature to prepare for your exams. Our AI generates questions based on your syllabus.</span></div>
+  </div>
+  <div class="d-flex gap-3 mb-4">
+    <div style="width:36px;height:36px;border-radius:50%;background:#d1fae5;color:#10b981;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">3</div>
+    <div><strong>Take Your Examinations</strong><br><span class="text-muted" style="font-size:.9rem;">When exams are scheduled, access them through Exam Management. Enter the password provided by your examiner.</span></div>
+  </div>
+  <div class="d-flex gap-3 mb-4">
+    <div style="width:36px;height:36px;border-radius:50%;background:#fef3c7;color:#f59e0b;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">4</div>
+    <div><strong>Track Your Progress</strong><br><span class="text-muted" style="font-size:.9rem;">Review your performance in History &amp; Marks. Analyze your scores and identify areas for improvement.</span></div>
+  </div>
+  <div class="d-flex gap-3">
+    <div style="width:36px;height:36px;border-radius:50%;background:#fee2e2;color:#ef4444;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">5</div>
+    <div><strong>Stay Informed</strong><br><span class="text-muted" style="font-size:.9rem;">Keep checking Important Notifications for updates about exam schedules, syllabus changes, and announcements.</span></div>
+  </div>
+</div>
+{% endblock %}

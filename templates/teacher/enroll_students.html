@@ -1,0 +1,84 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Enroll Students - {{ subject.name }}</h4>
+                    <a href="{% url 'teacher:marks_dashboard' subject.id %}" class="btn btn-light btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="enrollForm">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5 class="mb-3">Available Students</h5>
+                                <div class="list-group" style="max-height: 400px; overflow-y: auto;">
+                                    {% if available_students %}
+                                        {% for student in available_students %}
+                                        <label class="list-group-item">
+                                            <input type="checkbox" name="student_ids" value="{{ student.id }}" class="mr-2">
+                                            <strong>{{ student.roll_number }}</strong> - {{ student.user.get_full_name }}
+                                            <br><small class="text-muted">{{ student.department }} | Sem: {{ student.semester }}</small>
+                                        </label>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="alert alert-info">
+                                            All students are already enrolled
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <h5 class="mb-3">Already Enrolled ({{ enrolled_students|length }})</h5>
+                                <div class="list-group" style="max-height: 400px; overflow-y: auto;">
+                                    {% if enrolled_students %}
+                                        {% for student in enrolled_students %}
+                                        <div class="list-group-item">
+                                            <strong>{{ student.roll_number }}</strong> - {{ student.user.get_full_name }}
+                                            <br><small class="text-muted">{{ student.department }} | Sem: {{ student.semester }}</small>
+                                        </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="alert alert-info">
+                                            No students enrolled yet
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save"></i> Enroll Selected Students
+                            </button>
+                            <a href="{% url 'teacher:marks_dashboard' subject.id %}" class="btn btn-secondary btn-lg">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('enrollForm').addEventListener('submit', function(e) {
+        const checkboxes = document.querySelectorAll('input[name="student_ids"]:checked');
+        if (checkboxes.length === 0) {
+            e.preventDefault();
+            alert('Please select at least one student to enroll');
+        }
+    });
+</script>
+{% endblock %}

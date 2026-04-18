@@ -1,0 +1,66 @@
+{% extends "student/student_base.html" %}
+{% block title %}{{ exam.title }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+  <div>
+    <h2 style="font-weight:700;margin:0;">{{ exam.title }}</h2>
+    <p class="text-muted mb-0">{{ exam.subject.name }} &bull; {{ questions|length }} Questions</p>
+  </div>
+  <div id="timer-box"><i class="bi bi-clock-fill"></i> <span id="timer-display">Loading...</span></div>
+</div>
+
+<form method="post" id="exam-form">
+  {% csrf_token %}
+  {% for q in questions %}
+  <div class="card-portal p-4 mb-3">
+    <div class="d-flex gap-2 mb-3">
+      <span style="background:#2563eb;color:#fff;border-radius:8px;padding:4px 12px;font-weight:700;font-size:.88rem;flex-shrink:0;">Q{{ forloop.counter }}</span>
+      <p style="margin:0;font-weight:500;">{{ q.text }}</p>
+    </div>
+    <div class="row g-2">
+      <div class="col-12 col-md-6">
+        <label class="d-flex gap-2 align-items-center p-3 rounded-3 border" style="cursor:pointer;transition:background .15s;" onmouseover="this.style.background='#f0f9ff'" onmouseout="this.style.background=''">
+          <input type="radio" name="q_{{ q.id }}" value="A" required/> <strong>A.</strong> {{ q.option_a }}
+        </label>
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="d-flex gap-2 align-items-center p-3 rounded-3 border" style="cursor:pointer;" onmouseover="this.style.background='#f0f9ff'" onmouseout="this.style.background=''">
+          <input type="radio" name="q_{{ q.id }}" value="B"/> <strong>B.</strong> {{ q.option_b }}
+        </label>
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="d-flex gap-2 align-items-center p-3 rounded-3 border" style="cursor:pointer;" onmouseover="this.style.background='#f0f9ff'" onmouseout="this.style.background=''">
+          <input type="radio" name="q_{{ q.id }}" value="C"/> <strong>C.</strong> {{ q.option_c }}
+        </label>
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="d-flex gap-2 align-items-center p-3 rounded-3 border" style="cursor:pointer;" onmouseover="this.style.background='#f0f9ff'" onmouseout="this.style.background=''">
+          <input type="radio" name="q_{{ q.id }}" value="D"/> <strong>D.</strong> {{ q.option_d }}
+        </label>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  <div class="text-center mt-4">
+    <button type="submit" class="btn btn-success-portal px-5" onclick="return confirm('Submit exam? You cannot change answers after submission.')">
+      <i class="bi bi-check2-circle me-2"></i>Submit Exam
+    </button>
+  </div>
+</form>
+{% endblock %}
+{% block extra_js %}
+<script>
+  let remaining = {{ duration }};
+  const display = document.getElementById('timer-display');
+  const box = document.getElementById('timer-box');
+  function tick() {
+    const m = Math.floor(remaining / 60), s = remaining % 60;
+    display.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    if (remaining <= 300) box.classList.add('warning');
+    if (remaining <= 0) { document.getElementById('exam-form').submit(); return; }
+    remaining--;
+    setTimeout(tick, 1000);
+  }
+  tick();
+</script>
+{% endblock %}

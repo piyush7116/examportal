@@ -1,0 +1,172 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Manage Student Marks - Teacher{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2 class="mb-3">📊 Enter Student Marks - {{ subject.name }}</h2>
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> Enter marks for <strong>{{ enrollments.count }}</strong> enrolled students
+            </div>
+        </div>
+    </div>
+
+    <!-- Mark Type Tabs -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link {% if marks_type == 'theory' %}active{% endif %}" 
+                       href="?type=theory">📝 Theory Exam (50 marks)</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if marks_type == 'assignment' %}active{% endif %}" 
+                       href="?type=assignment">📋 Assignments (10 marks)</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if marks_type == 'quiz' %}active{% endif %}" 
+                       href="?type=quiz">❓ Quizzes (10 marks)</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Marks Entry Form -->
+    <form method="post" id="marks-form">
+        {% csrf_token %}
+        <div class="row mb-3">
+            <div class="col-md-6">
+                {% if marks_type == 'theory' %}
+                    <div class="form-group">
+                        <label for="exam_name">Theory Exam Name *</label>
+                        <input type="text" class="form-control" id="exam_name" name="exam_name" 
+                               placeholder="e.g., Mid-Term Theory Exam" required>
+                    </div>
+                {% elif marks_type == 'assignment' %}
+                    <div class="form-group">
+                        <label for="assignment_name">Assignment Name *</label>
+                        <input type="text" class="form-control" id="assignment_name" name="assignment_name" 
+                               placeholder="e.g., Assignment 1" required>
+                    </div>
+                {% elif marks_type == 'quiz' %}
+                    <div class="form-group">
+                        <label for="quiz_name">Quiz Name *</label>
+                        <input type="text" class="form-control" id="quiz_name" name="quiz_name" 
+                               placeholder="e.g., Quiz 1" required>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Students Marks Table -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width: 5%;">S.No</th>
+                                <th style="width: 20%;">Student Name</th>
+                                <th style="width: 15%;">Roll Number</th>
+                                <th style="width: 15%;">Marks
+                                    {% if marks_type == 'theory' %}(out of 50){% elif marks_type == 'assignment' %}(out of 10){% else %}(out of 10){% endif %}
+                                </th>
+                                <th style="width: 45%;">Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for enrollment in enrollments %}
+                                {% with existing = existing_marks|get_item:enrollment.student.id %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td><strong>{{ enrollment.student.user.get_full_name }}</strong></td>
+                                    <td>{{ enrollment.student.roll_number }}</td>
+                                    <td>
+                                        <input type="number" step="0.5" min="0" 
+                                               class="form-control form-control-sm" 
+                                               name="marks_{{ enrollment.student.id }}"
+                                               value="{% if existing %}{{ existing.marks_obtained }}{% endif %}"
+                                               placeholder="0">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control form-control-sm" 
+                                               name="remarks_{{ enrollment.student.id }}"
+                                               value="{% if existing %}{{ existing.remarks }}{% endif %}"
+                                               placeholder="Optional remarks">
+                                    </td>
+                                </tr>
+                                {% endwith %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="row">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="bi bi-check2-circle"></i> Submit Marks
+                </button>
+                <a href="{% url 'teacher:marks_dashboard' subject.id %}" class="btn btn-secondary btn-lg">
+                    <i class="bi bi-arrow-left"></i> Back
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    .nav-tabs .nav-link {
+        color: #333;
+        border-bottom: 3px solid #ddd;
+    }
+    .nav-tabs .nav-link:hover {
+        border-bottom-color: #2563eb;
+        color: #2563eb;
+    }
+    .nav-tabs .nav-link.active {
+        color: #fff;
+        background-color: #2563eb;
+        border-color: #2563eb;
+    }
+    .table-responsive {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+</style>
+
+<script>
+    // Add form validation
+    document.getElementById('marks-form').addEventListener('submit', function(e) {
+        const inputs = document.querySelectorAll('input[name^="marks_"]');
+        let hasMarks = false;
+        
+        inputs.forEach(input => {
+            if (input.value && parseFloat(input.value) > 0) {
+                hasMarks = true;
+            }
+        });
+        
+        if (!hasMarks) {
+            e.preventDefault();
+            alert('Please enter at least one student\'s marks');
+        }
+    });
+</script>
+
+<!-- Custom template filter for dictionary access -->
+{% comment %}
+Add this to your templatetags if not already present:
+@register.filter
+def get_item(dictionary, key):
+    if dictionary and key in dictionary:
+        return dictionary[key]
+    return None
+{% endcomment %}
+{% endblock %}

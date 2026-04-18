@@ -1,0 +1,96 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0"><i class="fas fa-edit"></i> Edit Teacher Details</h4>
+                    <a href="{% url 'adminpanel:teachers_manage' %}" class="btn btn-light btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info mb-4">
+                        <strong>Employee ID:</strong> {{ teacher.employee_id }}<br>
+                        <strong>Current Email:</strong> {{ teacher.email }}
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="first_name" class="form-label"><strong>First Name</strong></label>
+                                    <input type="text" id="first_name" name="first_name" class="form-control" value="{{ teacher.user.first_name }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="last_name" class="form-label"><strong>Last Name</strong></label>
+                                    <input type="text" id="last_name" name="last_name" class="form-control" value="{{ teacher.user.last_name }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email" class="form-label"><strong>Email</strong></label>
+                                    <input type="email" id="email" name="email" class="form-control" value="{{ teacher.email }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="phone" class="form-label"><strong>Phone</strong></label>
+                                    <input type="tel" id="phone" name="phone" class="form-control" value="{{ teacher.user.phone }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="department" class="form-label"><strong>Department</strong></label>
+                                    <input type="text" id="department" name="department" class="form-control" value="{{ teacher.department }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="designation" class="form-label"><strong>Designation</strong></label>
+                                    <input type="text" id="designation" name="designation" class="form-control" value="{{ teacher.designation }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="new_password" class="form-label"><strong>New Password (Leave blank to keep current)</strong></label>
+                                    <input type="password" id="new_password" name="new_password" class="form-control" placeholder="Optional">
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-save"></i> Update Teacher
+                            </button>
+                            <a href="{% url 'adminpanel:teachers_manage' %}" class="btn btn-secondary btn-lg">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

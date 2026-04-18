@@ -1,0 +1,71 @@
+{% extends "accounts/auth_base.html" %}
+{% block title %}Student Register{% endblock %}
+{% block card_width %}580px{% endblock %}
+{% block auth_content %}
+<div class="auth-icon" style="background:#dbeafe;color:#2563eb;">
+  <i class="bi bi-mortarboard-fill"></i>
+</div>
+<h2>Student Registration</h2>
+<p class="subtitle">Create your student account</p>
+
+<form method="post">
+  {% csrf_token %}
+  <div class="form-row mb-3">
+    <div class="form-group">
+      <label class="form-label">First Name</label>
+      <input type="text" name="first_name" class="form-control" placeholder="First name" required/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Last Name</label>
+      <input type="text" name="last_name" class="form-control" placeholder="Last name" required/>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">College Roll Number</label>
+    <input type="text" name="roll_number" class="form-control" placeholder="e.g. CS2024001" required/>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Email Address</label>
+    <input type="email" name="email" class="form-control" placeholder="student@college.edu"/>
+  </div>
+  <div class="form-row mb-3">
+    <div class="form-group">
+      <label class="form-label">Department</label>
+      <select name="department" class="form-select" required>
+        <option value="">Select department</option>
+        <option>Computer Science</option>
+        <option>Electronics &amp; Communication</option>
+        <option>Mechanical Engineering</option>
+        <option>Civil Engineering</option>
+        <option>Information Technology</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Semester</label>
+      <select name="semester" class="form-select" required>
+        <option value="">Select semester</option>
+        {% for i in "12345678" %}
+        <option>{{ i }}st Semester</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Phone Number</label>
+    <input type="tel" name="phone" class="form-control" placeholder="+91 9876543210"/>
+  </div>
+  <div class="form-row mb-4">
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input type="password" name="password" class="form-control" placeholder="Create password" required/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Confirm Password</label>
+      <input type="password" name="confirm_password" class="form-control" placeholder="Confirm password" required/>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-submit">Create Student Account</button>
+</form>
+<div class="switch-link">Already have an account? <a href="/student/login/">Login here</a></div>
+{% endblock %}
