@@ -34,7 +34,7 @@
                                     </td>
                                     <td>{{ item.total_questions }}</td>
                                     <td>
-                                        <span class="badge badge-primary">{{ item.total_attempts }}</span>
+                                        <span class="badge-portal badge-primary-portal">{{ item.total_attempts }}</span>
                                     </td>
                                     <td>
                                         {% if item.total_attempts > 0 %}
@@ -45,14 +45,14 @@
                                     </td>
                                     <td>
                                         {% if item.total_attempts > 0 %}
-                                            <span class="badge badge-success">{{ item.max_score }}%</span>
+                                            <span class="badge-portal badge-success-portal">{{ item.max_score }}%</span>
                                         {% else %}
                                             <span class="text-muted">—</span>
                                         {% endif %}
                                     </td>
                                     <td>
                                         {% if item.total_attempts > 0 %}
-                                            <span class="badge badge-danger">{{ item.min_score }}%</span>
+                                            <span class="badge-portal badge-danger-portal">{{ item.min_score }}%</span>
                                         {% else %}
                                             <span class="text-muted">—</span>
                                         {% endif %}

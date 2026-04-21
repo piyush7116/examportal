@@ -57,6 +57,14 @@
       </div>
     </a>
   </div>
+  <div class="col-12 col-md-3">
+    <a href="{% url 'teacher:upload_questions' %}" class="text-decoration-none">
+      <div class="action-card" style="background:linear-gradient(135deg,#c084fc,#e879f9);border-radius:14px;padding:24px;color:#fff;text-align:center;">
+        <i class="bi bi-lightbulb fs-3 mb-2 d-block"></i><div style="font-weight:700;">Practice Questions</div>
+        <small>Upload new practice sets</small>
+      </div>
+    </a>
+  </div>
 </div>
 
 <!-- Subject Management & Stats -->
@@ -72,7 +80,7 @@
             <small class="text-muted"><i class="fas fa-users"></i> {{ stat.students }} students enrolled</small>
           </div>
           <div class="text-right">
-            <span class="badge badge-pill badge-primary">{{ stat.exams }} exams</span>
+            <span class="badge-portal badge-primary-portal">{{ stat.exams }} exams</span>
             <a href="{% url 'teacher:subject_analytics' stat.subject.id %}" class="btn btn-sm btn-outline-primary ms-2">View</a>
           </div>
         </div>
@@ -131,7 +139,7 @@
               <td>{{ attempt.exam.title|truncatewords:3 }}</td>
               <td>{{ attempt.score }}/{{ attempt.total }}</td>
               <td>
-                <span class="badge {% if attempt.percentage >= 70 %}badge-success{% elif attempt.percentage >= 50 %}badge-warning{% else %}badge-danger{% endif %}">
+                <span class="badge-portal {% if attempt.percentage >= 70 %}badge-success-portal{% elif attempt.percentage >= 50 %}badge-warning-portal{% else %}badge-danger-portal{% endif %}">
                   {{ attempt.percentage }}%
                 </span>
               </td>
